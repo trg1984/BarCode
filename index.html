@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>BarCode test</title>
+		<script src="Code128.js"></script>
+		<script src="state.js"></script>
+		<script src="jquery-1.11.1.js"></script>
+		<script>
+			function draw() {
+				var scale = 2;
+			
+				var wid = drawBarCode(
+					$('canvas#barcode')[0],
+					'bsCode128',
+					true,
+					$('input[type="text"]').val(),
+					0,
+					0,
+					$('canvas#barcode')[0].width,
+					$('canvas#barcode')[0].height,
+					scale,
+					false
+				);
+				$('canvas#barcode')[0].width = wid;
+				console.log(wid);
+				drawBarCode(
+					$('canvas#barcode')[0],
+					'bsCode128',
+					true,
+					$('input[type="text"]').val(),
+					0,
+					0,
+					wid,
+					$('canvas#barcode')[0].height,
+					scale,
+					true
+				);
+				$('canvas#barcode').attr('style', '');
+			}
+		
+			$(document).ready(
+				function(ev) {
+					
+				}
+			);
+		</script>
+		<style>
+			.barcode {
+				border: 1px solid black;
+				margin: 8px;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="barcode" class="barcode" style="display: none;" width="100" height="250"></canvas><br />
+		<input type="text" />
+		<input type="button" value="Draw bar code" onclick="javascript:draw()" />
+	</body>
+</html>
