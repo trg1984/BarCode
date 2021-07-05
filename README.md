@@ -1,6 +1,8 @@
 BarCode
 =======
 
+![tualon.fi BarCode from BarCode App](exampleBarcode.png)
+
 One-dimensional client side bar code generator in JavaScript. Implements Code 128 standard
 in JavaScript for alphanumeric bar code generation. Imported from my previous Delphi version of the program.
 
