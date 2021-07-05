@@ -1,59 +1,96 @@
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>BarCode test</title>
+		<title>BarCode App</title>
 		<script src="Code128.js"></script>
 		<script src="state.js"></script>
-		<script src="jquery-1.11.1.js"></script>
 		<script>
 			function draw() {
 				var scale = 2;
-			
+				var canvas = document.querySelector('canvas#barcode');
 				var wid = drawBarCode(
-					$('canvas#barcode')[0],
+					canvas,
 					'bsCode128',
-					true,
-					$('input[type="text"]').val(),
+					document.querySelector('input[type="checkbox"]').checked,
+					document.querySelector('input[type="text"]').value,
 					0,
 					0,
-					$('canvas#barcode')[0].width,
-					$('canvas#barcode')[0].height,
+					canvas.width,
+					canvas.height,
 					scale,
 					false
 				);
-				$('canvas#barcode')[0].width = wid;
-				console.log(wid);
+				canvas.width = wid;
+				//console.log(wid);
 				drawBarCode(
-					$('canvas#barcode')[0],
+					canvas,
 					'bsCode128',
-					true,
-					$('input[type="text"]').val(),
+					document.querySelector('input[type="checkbox"]').checked,
+					document.querySelector('input[type="text"]').value,
 					0,
 					0,
 					wid,
-					$('canvas#barcode')[0].height,
+					canvas.height,
 					scale,
 					true
 				);
-				$('canvas#barcode').attr('style', '');
+				canvas.style = ''
 			}
-		
-			$(document).ready(
-				function(ev) {
-					
-				}
-			);
 		</script>
 		<style>
 			.barcode {
-				border: 1px solid black;
+				/*border: 1px solid black;*/
 				margin: 8px;
+			}
+			
+			.popupWindow {
+				display: inline-block;
+				max-width: 40em;
+				max-height: 40em;
+				background-color: white;
+				position: absolute;
+				top: 40%;
+				left: 50%;
+				transform: translateX(-50%) translateY(-50%);
+				text-align: center;
+				padding: 1em 2em;
+				box-shadow: 0 4em 12em rgba(0, 0, 0, 0.2);
+				border: 1px solid #eaeaea;
+				border-radius: 0.1em;
+				color: gray;
+				font-family: sans-serif;
+			}
+			
+			input[type="text"] {
+				outline: none;
+				border: none;
+				border-bottom: 1px solid #eaeaea;
+				margin-bottom: calc(1.2em - 1px);
+				border-radius: 0;
+				transition: 100ms all ease-in-out;
+				padding: 0em 0.25em;
+				text-align: center;
+			}
+			
+			input[type="text"]:focus {
+				border-bottom: 0.2em solid #3197d0;
+				margin-bottom: 1em;
+				
+			}
+			
+			.header {
+					font-size: 14pt;
+					letter-spacing: 1.3pt;
+					text-transform: uppercase;
 			}
 		</style>
 	</head>
-	<body>
-		<canvas id="barcode" class="barcode" style="display: none;" width="100" height="250"></canvas><br />
-		<input type="text" />
-		<input type="button" value="Draw bar code" onclick="javascript:draw()" />
+	<body onload="javascript:draw();">
+		<div class="popupWindow">
+			<div class="header">Barcode App</div>
+			<canvas id="barcode" class="barcode" style="display: none;" width="100" height="250"></canvas><br />
+			<input type="text" onkeyup="javascript:draw()" value="Tualon" />
+			<br/><input type="checkbox"  onchange="javascript:draw()"/> Show text
+		</div>
 	</body>
 </html>
