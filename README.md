@@ -7,3 +7,7 @@ in JavaScript for alphanumeric bar code generation. Imported from my previous De
 Lisence
 -------
 MIT lisence, but changes and fixes are strongly recommended to be sent here so everyone can benefit from them.
+
+Demo
+----
+[BarCode App Demo page](https://tualon.fi/barcode/)
