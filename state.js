@@ -1,4 +1,4 @@
-var barStyles = ["bsAuto", "bsFree", "bsEAN13", "bsUPC12", "bsCode128"];
+var barStyles = ["bsAuto", "bsFree", "bsEAN13", "bsUPC12", "bsCode128", "bsCode39"];
 
 function charToByte(c) {
      switch (c) {
@@ -17,20 +17,20 @@ function charToByte(c) {
 }
 
 function drawBarCode(canvas, barStyle, showText, n, x0, y0, w, h, thickness, visible) {
-
 	var left = 0, i, m, barH;
 	var fontSize = 12;
 	var ctx = canvas.getContext('2d');
 
 	var __L = function(bars, firstWhite, s, thickness, hei) {
-		//console.log(bars);
 		var temp = left;
-		var whiteBar = firstWhite;
+		var whiteBar = typeof(firstWhite) !== 'undefined' ? firstWhite : true;
+		thickness = Number.isSafeInteger(thickness) && (thickness > 0) ? thickness : 1;
+		hei = Number.isSafeInteger(hei) && (hei > 0) ? hei : barH;
 		
 		if (!!visible) {
 			ctx.fillStyle = 'black';
 			ctx.font = fontSize + 'px Arial';
-			if (showText && (s != '')) {
+			if (showText && s && (s != '')) {
 				ctx.fillText(s, x0 + left, y0 + hei + fontSize + 3);
 			}
 		}
@@ -56,7 +56,7 @@ function drawBarCode(canvas, barStyle, showText, n, x0, y0, w, h, thickness, vis
 
 	left = 5;
 	barH = showText ? h - fontSize * 2 - 1 : h - 2;
-	barStyle = 'bsCode128';
+	barStyle = barStyle ? barStyle : 'bsCode128';
 	
 	if (!!visible) {
 		ctx.fillStyle = "#ffffff";
@@ -95,6 +95,18 @@ function drawBarCode(canvas, barStyle, showText, n, x0, y0, w, h, thickness, vis
 			__L(T, false, '', thickness, barH);
 			__L([(10)], true, '', thickness, barH);
 			
+			return left;
+		break;
+		case 'bsCode39':
+			__L(Code39.binToBars('010010100'), false, '*', thickness, barH);
+			left += thickness;
+			for (var i = 0; i < n.length; ++i) {
+				var bars = Code39.charToBars(n[i]);
+				__L(bars, false, n[i], thickness, barH);
+				left += thickness;
+			}
+			__L(Code39.binToBars('010010100'), false, '*', thickness, barH);
+			left += thickness;
 			return left;
 		break;
 		default: console.log('Unimplemented bar style ' + barStyle); break;

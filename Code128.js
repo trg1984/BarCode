@@ -1,6 +1,6 @@
 /**
  * Code128
- * Copyright © Rolf Lindén (rolind@utu.fi) 2006--2014
+ * Copyright © Rolf Lindén (rolind@utu.fi) 2006--2021
  * Original data from http://www.adams1.com/pub/russadam/128table.html
  */
 
