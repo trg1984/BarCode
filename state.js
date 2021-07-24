@@ -1,4 +1,4 @@
-var barStyles = ["bsAuto", "bsFree", "bsEAN13", "bsUPC12", "bsCode128", "bsCode39"];
+var barStyles = ["bsAuto", "bsEAN13", "bsUPCA", "bsCode128", "bsCode39"];
 
 function charToByte(c) {
      switch (c) {
@@ -73,14 +73,25 @@ function drawBarCode(canvas, barStyle, showText, n, x0, y0, w, h, thickness, vis
 			__L(T, false, '', thickness, barH);
 
 			var checkSum = 104;
-			for (i = 0; i < n.length; ++i) {
-				var V = Code128.getValue(n[i], Code128.CodeSet.csB);
-				if (V == 255) alert(n[i] + ' not found in Code 128 codeset.');
+			i = 0
+			while (i < n.length) {
+				var n0;
+				if (n.substr(i).search('{FNC1}') === 0) n0 = '{FNC1}';
+				else if (n.substr(i).search('{FNC2}') === 0) n0 = '{FNC2}';
+				else if (n.substr(i).search('{FNC3}') === 0) n0 = '{FNC3}';
+				else if (n.substr(i).search('{FNC4}') === 0) n0 = '{FNC4}';
+				else if (n.substr(i).search('{SHIFT}') === 0) n0 = '{SHIFT}';
+				else n0 = n[i];
+
+				var V = Code128.getValue(n0, Code128.CodeSet.csB);
+				if (V == 255) alert(n0 + ' not found in Code 128 codeset.');
 				checkSum = (checkSum + V * (i + 1)) % 103;
 				str = Code128.getBarCode(V);
 				T = new Array(str.length);
 				for (m = 0; m < str.length; ++m) T[m] = str.charAt(m);
-				__L(T, false, n[i], thickness, barH);
+				__L(T, false, n0.length === 1 ? n0 : '', thickness, barH);
+
+				i += n0.length;
 			}
 			
 			// checkSum + "Stop" + Space
@@ -107,6 +118,28 @@ function drawBarCode(canvas, barStyle, showText, n, x0, y0, w, h, thickness, vis
 			}
 			__L(Code39.binToBars('010010100'), false, '*', thickness, barH);
 			left += thickness;
+			return left;
+		break;
+		case 'bsUPCA':
+		case 'bsEAN13':
+			if ((barStyle === 'bsUPCA') && (n.length == 12)) {
+				n = '0' + n;
+			}
+
+			if (
+				(typeof(n) === 'string') &&
+				(n.length === 13) &&
+				(n.search(/^[0-9]{13}$/) === 0) &&
+				(EAN13.checksumDigit(n.substr(0,12)) + '' === n[12]) &&
+				((barStyle != 'bsUPCA') || (n.substr(0, 1) == '0'))
+			) {
+				var params = EAN13.convert(n).map(function(item) { return EAN13.binToBars(item) });
+				var s = ' ' + n.substr(1,6) + ' ' + n.substr(7,13);
+				__L([7], true, barStyle === 'bsUPCA' ? '' : n.substr(0, 1), thickness, barH);
+				for (var i = 0; i < params.length; ++i) {
+					__L(params[i].bars, params[i].firstWhite, s[i], thickness, [0, 7, 14].indexOf(i) < 0 ? h - fontSize * 2 - 1 : h - 2);
+				}
+			}
 			return left;
 		break;
 		default: console.log('Unimplemented bar style ' + barStyle); break;

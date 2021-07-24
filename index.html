@@ -4,6 +4,7 @@
 		<title>BarCode App</title>
 		<script src="Code39.js"></script>
 		<script src="Code128.js"></script>
+		<script src="EAN13.js"></script>
 		<script src="state.js"></script>
 		<script>
 			function draw() {
@@ -45,7 +46,6 @@
 			
 			.popupWindow {
 				display: inline-block;
-				max-width: 40em;
 				max-height: 40em;
 				background-color: white;
 				position: absolute;
@@ -95,6 +95,9 @@
 			<select class="codeType" onchange="javascript:draw()">
 				<option value="bsCode39">Code 39 (Full ASCII)</option>
 				<option value="bsCode128" selected>Code 128</option>
+				<option value="bsEAN13">EAN 13 / ISBN-13 / ISSN / ISMN / JAN-13 / GTIN-13 (13 digits)</option>
+				<option value="bsUPCA">UPC-A (12 digits)</option>
+				</option>
 			</select>
 		</div>
 	</body>

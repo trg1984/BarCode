@@ -191,21 +191,6 @@ Code39 = {
         for (i in a) b.push((a[i]|0) + 1);
         return b;
     },
-    binToCountBars: function(bin) {
-        
-        a = bin.split('');
-        var b = [], prev = '', count = 0;
-        for (i in a) {
-            if (a[i] === prev) ++count;
-            else {
-                b.push(count);
-                prev = a[i];
-                count = 1;
-            }
-        };
-        b.push(count);
-        return b.splice(1);
-    },
     charToBars: function(c) {
         var self = this;
         var s = this.conv[this.conv.filter(function(item, index) { return index % 3 === 1 }).indexOf(c) * 3 + 2];
